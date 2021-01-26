@@ -11,7 +11,6 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 const Employee = require("./lib/Employee");
 
-
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
@@ -49,12 +48,8 @@ name: 'email'
         message: 'What is your github username?',
         name: 'github'
         },]).then((response) => {
-            const newEmployee = new Engineer(name, id, email, response.github)
-            render(newEmployee)
-
-            console.log(newEmployee)
-            return newEmployee;
-
+            const employee = new Engineer(name, id, email, response.github)
+            render(Object.values(employee))
         })
         
         
@@ -64,11 +59,8 @@ name: 'email'
             message: 'What is your office number',
             name: 'office'
             },])
-            const newEmployee = new Manager(name, id, email, response.office)
-            render(newEmployee)
 
-            console.log(newEmployee)
-            return newEmployee;
+            const employee = new Manager(name, id, email, response.office)
 
 
     } else if (response.role == 'Intern') {
@@ -79,29 +71,28 @@ name: 'email'
 
             },
         ,])
-        const newEmployee = new Intern(name, id, email, response.school)
-        console.log(newEmployee)
-        render(newEmployee)
+        
 
-        return newEmployee;
+        const employee = new Intern(name, id, email, response.school)
 
 
     } 
     else {
-        const newEmployee = new Employee(name,id,email, role)
-        console.log(newEmployee)
-        render(newEmployee)
+        const employee = new Employee(name,id,email, role)
+         
 
-        return newEmployee;
+        render(Object.entries(employee))
 
     }
-
-
     
+    
+
 })
 
 
 
+
+  
 
 
 // After the user has input all employees desired, call the `render` function (required
@@ -114,13 +105,5 @@ name: 'email'
 // Hint: you may need to check if the `output` folder exists and create it if it
 // does not.
 
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
 
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
 
