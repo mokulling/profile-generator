@@ -11,6 +11,11 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./lib/htmlRenderer");
 const Employee = require("./lib/Employee");
 
+let engArray = []
+let managerArray = []
+let internArray = []
+let employeeArray = []
+
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
@@ -49,9 +54,11 @@ name: 'email'
         name: 'github'
         },]).then((response) => {
             const employee = new Engineer(name, id, email, response.github)
-            render(Object.values(employee))
+            buildTeam()
+    
         })
         
+    
         
     } else if (response.role == 'Manager') {
         inquirer.prompt([
@@ -61,6 +68,9 @@ name: 'email'
             },])
 
             const employee = new Manager(name, id, email, response.office)
+            managerArray.push(employee)
+            buildTeam()            
+        
 
 
     } else if (response.role == 'Intern') {
@@ -74,14 +84,16 @@ name: 'email'
         
 
         const employee = new Intern(name, id, email, response.school)
-
-
+        internArray.push(employee)    
+        buildTeam()
+    
     } 
     else {
         const employee = new Employee(name,id,email, role)
-         
-
-        render(Object.entries(employee))
+        employeeArray.push(employee)
+    buildTeam()        
+    
+        
 
     }
     
@@ -89,6 +101,35 @@ name: 'email'
 
 })
 
+const buildTeam = () => {
+    inquirer.prompt([
+        {
+          type: "list",
+          name: "member",
+          message: "Who is your next member?",
+          choices: [
+            "Engineer",
+            "Intern",
+            "Finished"
+          ],
+          default: "Engineer"
+        }]).then((response => {
+            if(answer.member === "Engineer"){
+                buildEngineer()
+            } else if (answer.member === "Intern"){
+                buildIntern()
+            } else {
+
+                const array = managerArray.concat(engineerArray, internArray)
+                // managerTemplate(managerArray)
+                // engineerTemplate(engineerArray)
+                // internTemplate(internArray)
+                render(array)
+                    fs.writeFileSync(outputPath,render(array), "utf-8") 
+                        console.log('File saved!');
+                      
+            }}))
+        }
 
 
 
