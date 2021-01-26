@@ -9,6 +9,7 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const Employee = require("./lib/Employee");
 
 
 // Write code to use inquirer to gather information about the development team members,
@@ -31,14 +32,31 @@ message: 'What is your id',
 name: 'id',
 
 },
+{type: 'input',
+message: 'What is your email address?',
+name: 'email'
+
+}
     
 ]).then((response) => {
+    let name = response.name
+    let role = response.role
+    let id = response.id
+    let email = response.email
     if ( response.role == 'Engineer'){
         inquirer.prompt ([
             {type: 'input',
         message: 'What is your github username?',
         name: 'github'
-        },])
+        },]).then((response) => {
+            const newEmployee = new Engineer(name, id, email, response.github)
+            render(newEmployee)
+
+            console.log(newEmployee)
+            return newEmployee;
+
+        })
+        
         
     } else if (response.role == 'Manager') {
         inquirer.prompt([
@@ -46,20 +64,43 @@ name: 'id',
             message: 'What is your office number',
             name: 'office'
             },])
-    } else {
+            const newEmployee = new Manager(name, id, email, response.office)
+            render(newEmployee)
+
+            console.log(newEmployee)
+            return newEmployee;
+
+
+    } else if (response.role == 'Intern') {
         inquirer.prompt([
             {type: 'input',
             message: 'What school did you go to?',
             name: 'school',
 
             },
-        ])
-    }
+        ,])
+        const newEmployee = new Intern(name, id, email, response.school)
+        console.log(newEmployee)
+        render(newEmployee)
 
+        return newEmployee;
+
+
+    } 
+    else {
+        const newEmployee = new Employee(name,id,email, role)
+        console.log(newEmployee)
+        render(newEmployee)
+
+        return newEmployee;
+
+    }
 
 
     
 })
+
+
 
 
 
